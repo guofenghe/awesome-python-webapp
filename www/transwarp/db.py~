@@ -206,6 +206,9 @@ class _TransactionCtx(object):
         finally:
             if self.should_close_conn:
                 _db_ctx.cleanup()
+                print "type:", exctype
+                print "value:", excvalue
+                print "trace:", traceback
    
     def commit(self):
         global _db_ctx
