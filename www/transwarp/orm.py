@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-__author__ = 'guofenghe
+__author__ = 'guofenghe'
 
 
 
@@ -27,6 +27,7 @@ class Field(object):
 
     @property
     def default(self):
+        d = self._default
         return d() if callable(d) else d
 
     def __str__(self):
@@ -65,7 +66,7 @@ class FloatField(Field):
             kw['default'] = 0.0
         if not 'ddl' in kw:
             kw['ddl'] = 'real'
-    super(FloatField, self).__init__(**kw)
+        super(FloatField, self).__init__(**kw)
 
 
 class BooleanField(Field):
@@ -74,17 +75,17 @@ class BooleanField(Field):
             kw['default'] = False
         if not 'ddl' in kw:
             kw['ddl'] = 'bool'
-    super(BooleanField, self).__init__(**kw)
+        super(BooleanField, self).__init__(**kw)
 
 
 
 class TextField(Field):
     def __init__(self, **kw):
-    if not 'default' in kw:
-        kw['default'] = ''
-    if not 'ddl' in kw:
-        kw['ddl'] = 'text'
-    super(TextField, self).__init__(**kw)
+        if not 'default' in kw:
+            kw['default'] = ''
+        if not 'ddl' in kw:
+            kw['ddl'] = 'text'
+            super(TextField, self).__init__(**kw)
 
 
 class BlobField(Field):
@@ -99,12 +100,12 @@ class BlobField(Field):
 
 class VersionField(Field):
     def __init__(self, name=None):
-        super(VersionField, self).__init__(name=name, default=0, ddl='bigint')
+       super(VersionField, self).__init__(name=name, default=0, ddl='bigint')
 
-_triggers = frozenset(['pre_insert', 'pre_update', 'pre_delete']
+_triggers = frozenset(['pre_insert', 'pre_update', 'pre_delete'])
 
 
-def _gen_sql(table_name, mappings):
+def _gen_sql(table_name,mappings):
     pk = None
     sql = ['-- generating SQL for %s:' % table_name, 'create table `%s` (' % table_name]
     for f in sorted(mappings.values(), lambda x, y: cmp(x._order, y._order)):
@@ -134,20 +135,20 @@ class ModelMetaclass(type):
         primary_key = None
         for k, v in attrs.iteritems():
             if isinstance(v, Field):
-                 if not v.name:
-                     v.name = k
-                 logging.info('Found mapping: %s => %s' % (k, v))
-            if v.primary_key:
-                 if primary_key:
-                     raise TypeError('Cannot define more than 1 primary key in class: %s' % name)
-                 if v.updatable:
-                     logging.warning('NOTE: change primary key to non-updatable.')
-                     v.updatable = False
-                 if v.nullable:
-                     logging.warning('NOTE: change primary key to non-nullable.')
-                     v.nullable = False
-            primary_key = v
-        mappings[k] = v
+                if not v.name:
+                    v.name = k
+                    logging.info('Found mapping: %s => %s' % (k, v))
+                if v.primary_key:
+                    if primary_key:
+                        raise TypeError('Cannot define more than 1 primary key in class: %s' % name)
+                    if v.updatable:
+                        logging.warning('NOTE: change primary key to non-updatable.')
+                        v.updatable = False
+                    if v.nullable:
+                        logging.warning('NOTE: change primary key to non-nullable.')
+                        v.nullable = False
+                    primary_key = v
+                mappings[k] = v
         if not primary_key:
             raise TypeError('Primary key not defined in class: %s' % name)
         for k in mappings.iterkeys():
@@ -245,13 +246,13 @@ class Model(dict):
     def insert(self):
         self.pre_insert and self.pre_insert()
         params = {}
-            for k, v in self.__mappings__.iteritems():
-                if v.insertable:
-                    if not hasattr(self, k):
-                        setattr(self, k, v.default)
-                    params[v.name] = getattr(self, k)
-            db.insert('%s' % self.__table__, **params)
-            return self
+        for k, v in self.__mappings__.iteritems():
+            if v.insertable:
+                if not hasattr(self, k):
+                    setattr(self, k, v.default)
+                params[v.name] = getattr(self, k)
+        db.insert('%s' % self.__table__, **params)
+        return self
 
     
 

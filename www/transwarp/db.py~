@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
 __author__ = 'Guo feng he'
@@ -70,7 +70,7 @@ class _LasyConnection(object):
         self.connection=None
 
     def cursor(self):
-        if self.connection is None
+        if self.connection is None:
             connection = engine.connect()
             logging.info('open connection <%s>...' % hex(id(connection)))
             self.connection=connection
@@ -83,7 +83,7 @@ class _LasyConnection(object):
         self.connection.rollback()
 
     def cleanup(self):
-        if self.connection
+        if self.connection:
             connection=self.connection
             self.connection=None
             logging.info('close connection <%s>...' % hex(id(connection)))
@@ -163,7 +163,7 @@ class _ConnectionCtx(object):
     def __exit__(self, exctype, excvalue, traceback):
         global _db_ctx
         if self.should_cleanup:
-        _db_ctx.cleanup()
+            _db_ctx.cleanup()
         print "type:", exctype
         print "value:", excvalue
         print "trace:", traceback
@@ -174,7 +174,7 @@ def connection():
 
 
 ############################################## 
-def with_connection(func)
+def with_connection(func):
     @functools.wraps(func)
     def _wrapper(*args, **kw):
         with _ConnectionCtx():

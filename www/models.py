@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
-
+import time, uuid
 __author__ = 'Guo feng he'
 
 from transwarp.db import next_id
